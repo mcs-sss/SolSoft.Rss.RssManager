@@ -1,0 +1,83 @@
+﻿<Window x:Class="SolSoft.Rss.RssManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:local="clr-namespace:SolSoft.Rss.RssManager"
+        Title="SolSoft RSS Manager" Height="480" Width="640" Loaded="Window_Loaded" Icon="rss.ico">
+
+	<Window.Resources>
+		<Style x:Key="labelStyle" TargetType="{x:Type Label}">
+			<Setter Property="VerticalAlignment" Value="Center"></Setter>
+			<Setter Property="Margin" Value="2"></Setter>
+			<Setter Property="FontStyle" Value="Italic"></Setter>
+		</Style>
+
+		<Style TargetType="{x:Type TextBox}">
+
+			<Style.Triggers>
+				<!--<Trigger Property="IsReadOnly" Value="False">
+					<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+				</Trigger>
+				<Trigger Property="IsReadOnly" Value="True">
+					<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+				</Trigger>-->
+				<Trigger Property="IsReadOnly" Value="True">
+					<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+				</Trigger>
+				<Trigger Property="IsReadOnly" Value="False">
+					<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+				</Trigger>
+				
+			</Style.Triggers>
+		</Style>
+	</Window.Resources>
+
+	<Grid>
+		<DockPanel>
+			<StackPanel DockPanel.Dock="Top">
+				<TextBlock Text="Feeds" FontWeight="Bold"></TextBlock>
+				<Rectangle Height="1" Stretch="Fill"></Rectangle>
+			</StackPanel>
+			<Grid DockPanel.Dock="Bottom" DataContext="{Binding Path=CurrentItem}">
+				<Grid.RowDefinitions>
+					<RowDefinition />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<Label Grid.Column="0" Style="{StaticResource labelStyle}" Target="{Binding ElementName=textBoxName}">_Name:</Label>
+				<TextBox Grid.Column="1" Name="textBoxName" MinWidth="75" Margin="2" VerticalAlignment="Center" IsReadOnly="True" />
+				
+				<Label Grid.Column="2" Style="{StaticResource labelStyle}" Target="{Binding ElementName=textBoxUrl}">_URL: </Label>
+				<TextBox Grid.Column="3" Name ="textBoxUrl" MinWidth="75" VerticalAlignment="Center" Margin="2" Grid.ColumnSpan="3" TextChanged="textBoxUrl_TextChanged" />
+				
+				<Button Grid.Column="4" Name="buttonCommit" Content="_Commit" MinHeight="23" MinWidth="75" Margin="2" Click="buttonCommit_Click" Grid.Row="1"></Button>
+				<Button Grid.Column="5" Name="buttonRevert" Content="_Revert" MinHeight="23" MinWidth="75" Margin="2" Grid.Row="1" Click="buttonRevert_Click"></Button>
+			</Grid>
+			<TreeView DockPanel.Dock="Bottom" Name="treeViewFeeds" SelectedItemChanged="treeViewFeeds_SelectedItemChanged">
+				<TreeView.Resources>
+					<HierarchicalDataTemplate DataType="{x:Type local:FeedFolderViewModel}" 
+											  ItemsSource="{Binding Path=Subitems}">
+						<TextBlock Text="{Binding Path=Name}" />
+					</HierarchicalDataTemplate>
+
+					<DataTemplate DataType="{x:Type local:FeedViewModel}" >
+						<TextBlock Text="{Binding Path=Name}" />
+					</DataTemplate>
+				</TreeView.Resources>
+			</TreeView>
+			<!--<ListBox ItemsSource="{Binding}" IsSynchronizedWithCurrentItem="True" SelectionChanged="ListBox_SelectionChanged" Name="listBoxFeeds">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Name ="m_listEntryNameText" Text="{Binding Path=Name}"></TextBlock>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>-->
+		</DockPanel>
+	</Grid>
+</Window>
